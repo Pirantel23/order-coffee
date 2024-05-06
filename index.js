@@ -8,11 +8,6 @@ document.querySelector(".add-button").addEventListener("click", () => createFiel
 const modal = document.querySelector(".modal-overlay");
 const modalContent = modal.querySelector(".modal-content");
 
-document.querySelector('.modal-close').addEventListener('click', () => {
-    modal.style.display = 'none';
-    modalContent.querySelectorAll('p').forEach(p => p.remove());
-});
-
 document.querySelector('.submit-button').addEventListener('click', handleFormSubmit);
 fieldSetElements[0].querySelector('textarea[name="other"]').addEventListener('input', function() {
         fieldSetElements[0].querySelector('.other-output').innerHTML = highlightSpecialWords(this.value);
@@ -21,6 +16,7 @@ fieldSetElements[0].querySelector('textarea[name="other"]').addEventListener('in
 function handleFormSubmit(event) {
     event.preventDefault();
     modal.style.display = "block";
+    appendCloseButton();
     appendToModal("Заказ принят!");
     appendToModal(`Вы заказали ${fieldSetsCount} ${getDeclension(fieldSetsCount)}`);
     appendTable(modalContent);
@@ -30,6 +26,16 @@ function highlightSpecialWords(text) {
     const keywords = ['срочно', 'быстрее', 'побыстрее', 'скорее', 'поскорее', 'очень нужно'];
     const regex = new RegExp(keywords.join('|'), 'gi');
     return text.replace(regex, '<b>$&</b>');
+}
+
+function appendCloseButton() {
+    let closeButton = document.createElement("span");
+    closeButton.classList.add("modal-close");
+    closeButton.innerHTML = "&times;";
+    modalContent.appendChild(closeButton).addEventListener('click', () => {
+        modal.style.display = 'none';
+        modalContent.innerHTML = '';
+    });
 }
 
 function appendToModal(text) {
@@ -42,7 +48,7 @@ function appendTable() {
     const table = document.createElement('table');
     const headerRow = document.createElement('tr');
     table.appendChild(headerRow);
-    ["Напиток", "Молоко", "Дополнительно"].forEach(headerName => {
+    ["Напиток", "Молоко", "Дополнительно", "Пожелания"].forEach(headerName => {
         const headerEl = document.createElement('th');
         headerEl.textContent = headerName;
         headerRow.appendChild(headerEl);
@@ -61,6 +67,10 @@ function appendTable() {
         const options = document.createElement('td');
         options.textContent = [...fieldset.querySelectorAll('input[type="checkbox"]:checked')].map(el => el.value).join(', ');
         row.appendChild(options);
+
+        const wishes = document.createElement('td');
+        wishes.textContent = fieldset.querySelector('textarea').value;
+        row.appendChild(wishes);
 
         table.appendChild(row);
     });
