@@ -20,12 +20,44 @@ function handleFormSubmit(event) {
     modal.style.display = "block";
     appendToModal("Заказ принят!");
     appendToModal(`Вы заказали ${fieldSetsCount} ${getDeclension(fieldSetsCount)}`);
+    appendTable(modalContent);
 }
 
 function appendToModal(text) {
     let p = document.createElement("p");
     p.innerText = text;
     modalContent.appendChild(p);
+}
+
+function appendTable() {
+
+    const table = document.createElement('table');
+    const headerRow = document.createElement('tr');
+    table.appendChild(headerRow);
+    ["Напиток", "Молоко", "Дополнительно"].forEach(headerName => {
+        const headerEl = document.createElement('th');
+        headerEl.textContent = headerName;
+        headerRow.appendChild(headerEl);
+    });
+
+    document.querySelectorAll('.beverage').forEach(fieldset => {
+        const row = document.createElement('tr');
+        const beverage = document.createElement('td');
+        beverage.textContent = fieldset.querySelector('select').selectedOptions[0].value;
+        row.appendChild(beverage);
+
+        const milk = document.createElement('td');
+        milk.textContent = fieldset.querySelector('input[type="radio"]:checked').value;
+        row.appendChild(milk);
+
+        const options = document.createElement('td');
+        options.textContent = [...fieldset.querySelectorAll('input[type="checkbox"]:checked')].map(el => el.value).join(', ');
+        row.appendChild(options);
+
+        table.appendChild(row);
+    });
+
+    modalContent.appendChild(table);
 }
 
 function getDeclension(i) {
