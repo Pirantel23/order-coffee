@@ -14,6 +14,9 @@ document.querySelector('.modal-close').addEventListener('click', () => {
 });
 
 document.querySelector('.submit-button').addEventListener('click', handleFormSubmit);
+fieldSetElements[0].querySelector('textarea[name="other"]').addEventListener('input', function() {
+        fieldSetElements[0].querySelector('.other-output').innerHTML = highlightSpecialWords(this.value);
+});
 
 function handleFormSubmit(event) {
     event.preventDefault();
@@ -23,6 +26,12 @@ function handleFormSubmit(event) {
     appendTable(modalContent);
 }
 
+function highlightSpecialWords(text) {
+    const keywords = ['срочно', 'быстрее', 'побыстрее', 'скорее', 'поскорее', 'очень нужно'];
+    const regex = new RegExp(keywords.join('|'), 'gi');
+    return text.replace(regex, '<b>$&</b>');
+}
+
 function appendToModal(text) {
     let p = document.createElement("p");
     p.innerText = text;
@@ -30,7 +39,6 @@ function appendToModal(text) {
 }
 
 function appendTable() {
-
     const table = document.createElement('table');
     const headerRow = document.createElement('tr');
     table.appendChild(headerRow);
@@ -80,6 +88,11 @@ function createFieldSet() {
     fieldSetElement.querySelector(".delete-button").addEventListener("click", () => deleteFieldSet(fieldSetElement));
     fieldSetElement.querySelectorAll("input[type='radio']").forEach(field => {
         field.setAttribute("name", `milk${nameIndex}`);
+    });
+    const otherOutput = fieldSetElement.querySelector('.other-output');
+    otherOutput.innerHTML = '';
+    fieldSetElement.querySelector('textarea[name="other"]').addEventListener('input', function() {
+        otherOutput.innerHTML = highlightSpecialWords(this.value);
     });
     fieldSetElements.push(fieldSetElement);
     container.appendChild(fieldSetElement);
