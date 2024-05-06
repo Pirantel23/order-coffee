@@ -5,6 +5,18 @@ let nameIndex = 1;
 
 container.querySelector(".delete-button").addEventListener("click", () => deleteFieldSet(fieldSetElements[0]));
 document.querySelector(".add-button").addEventListener("click", () => createFieldSet());
+const modal = document.querySelector(".modal-overlay");
+
+document.querySelector('.modal-close').addEventListener('click', () => {
+    modal.style.display = 'none';
+});
+
+document.querySelector('.submit-button').addEventListener('click', handleFormSubmit);
+
+function handleFormSubmit(event) {
+    event.preventDefault();
+    modal.style.display = "block";
+}
 
 function createFieldSet() {
     nameIndex++;
