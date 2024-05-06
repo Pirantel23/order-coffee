@@ -20,12 +20,44 @@ function handleFormSubmit(event) {
     appendToModal("Заказ принят!");
     appendToModal(`Вы заказали ${fieldSetsCount} ${getDeclension(fieldSetsCount)}`);
     appendTable(modalContent);
+    appendTimeField();
+    appendSubmitButton();
 }
 
 function highlightSpecialWords(text) {
     const keywords = ['срочно', 'быстрее', 'побыстрее', 'скорее', 'поскорее', 'очень нужно'];
     const regex = new RegExp(keywords.join('|'), 'gi');
     return text.replace(regex, '<b>$&</b>');
+}
+
+function appendTimeField() {
+    let timeField = document.createElement("input");
+    timeField.setAttribute("type", "time");
+    timeField.setAttribute("name", "time");
+    timeField.setAttribute("required", "true");
+    modalContent.appendChild(timeField);
+}
+
+function appendSubmitButton() {
+    let submitButton = document.createElement("button");
+    submitButton.setAttribute("type", "submit");
+    submitButton.innerText = "Оформить";
+    modalContent.appendChild(submitButton).addEventListener('click', handleOrderSubmit);
+}
+
+function handleOrderSubmit() {
+    const timeField = modalContent.querySelector('input[type="time"]');
+    const currentTime = new Date();
+    const selectedTime = new Date(currentTime.toDateString() + ' ' + timeField.value);
+    if (selectedTime < currentTime) {
+        timeField.style.borderColor = 'red';
+        setTimeout(() => {
+            alert("Мы не умеем перемещаться во времени. Выберите время позже, чем текущее");
+        }, 0);
+    } else {
+        modal.style.display = 'none';
+        modalContent.innerHTML = '';
+    }
 }
 
 function appendCloseButton() {
