@@ -6,9 +6,11 @@ let nameIndex = 1;
 container.querySelector(".delete-button").addEventListener("click", () => deleteFieldSet(fieldSetElements[0]));
 document.querySelector(".add-button").addEventListener("click", () => createFieldSet());
 const modal = document.querySelector(".modal-overlay");
+const modalContent = modal.querySelector(".modal-content");
 
 document.querySelector('.modal-close').addEventListener('click', () => {
     modal.style.display = 'none';
+    modalContent.querySelectorAll('p').forEach(p => p.remove());
 });
 
 document.querySelector('.submit-button').addEventListener('click', handleFormSubmit);
@@ -16,6 +18,25 @@ document.querySelector('.submit-button').addEventListener('click', handleFormSub
 function handleFormSubmit(event) {
     event.preventDefault();
     modal.style.display = "block";
+    appendToModal("Заказ принят!");
+    appendToModal(`Вы заказали ${fieldSetsCount} ${getDeclension(fieldSetsCount)}`);
+}
+
+function appendToModal(text) {
+    let p = document.createElement("p");
+    p.innerText = text;
+    modalContent.appendChild(p);
+}
+
+function getDeclension(i) {
+    let mod = i % 100;
+    if (mod % 10 >= 5 || mod % 10 === 0 || [11, 12, 13, 14].includes(mod)) {
+        return "напитков";
+    }
+    else if (mod % 10 > 1 && mod % 10 <= 4) {
+        return "напитка";
+    }
+    return "напиток";
 }
 
 function createFieldSet() {
